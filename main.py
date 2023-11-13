@@ -11,10 +11,17 @@ from app.config import Configuration
 from app.forms.classification_form import ClassificationForm
 from app.ml.classification_utils import classify_image
 from app.utils import list_images
-
+from app.data_storage import result_storage
+from fastapi.responses import FileResponse
+import json
 
 app = FastAPI()
 config = Configuration()
+global result
+result = result_storage()
+semaphore = False
+
+
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
@@ -51,6 +58,9 @@ async def request_classification(request: Request):
     image_id = form.image_id
     model_id = form.model_id
     classification_scores = classify_image(model_id=model_id, img_id=image_id)
+    result.generate_JSON(classification_score= classification_scores)  #generate JSON file for the result of classification-score
+    with open("result.json", "w") as f:
+        json.dump(result.classification_results, f)  #generate JSON file for the result of classification-score      
     return templates.TemplateResponse(
         "classification_output.html",
         {
@@ -59,3 +69,8 @@ async def request_classification(request: Request):
             "classification_scores": json.dumps(classification_scores),
         },
     )
+
+@app.get("/classifications/download")
+async def download_result():
+    return FileResponse('result.json', media_type='application/json', filename='result.json')
+    
