@@ -14,6 +14,7 @@ from app.utils import list_images
 from app.data_storage import result_storage
 from fastapi.responses import FileResponse
 import json
+import matplotlib.pyplot as plt
 
 app = FastAPI()
 config = Configuration()
@@ -61,6 +62,21 @@ async def request_classification(request: Request):
     result.generate_JSON(classification_score= classification_scores)  #generate JSON file for the result of classification-score
     with open("result.json", "w") as f:
         json.dump(result.classification_results, f)  #write the result into the JSON file   
+    data = [classification_scores[0][1], classification_scores[1][1], classification_scores[2][1], classification_scores[3][1], classification_scores[4][1]]
+    labels = [classification_scores[0][0], classification_scores[1][0], classification_scores[2][0], classification_scores[3][0], classification_scores[4][0]]
+    colors = [(26/255,74/255,4/255,0.8), (117/255,0/255,20/255,0.8), (121/255,87/255,3/255,0.8), (6/255,33/255,108/255,0.8), (63/255,3/255,85/255,0.8)]
+    plt.figure(figsize=(15, 10))
+    plt.barh(labels, data, color=colors)  
+    plt.gca().invert_yaxis()  # Invert the y-axis
+    plt.grid(True)
+    plt.title('Output Scores', size=20, style='italic', color='black')
+    plt.tick_params(axis='x', labelsize=16)
+    plt.tick_params(axis='y', labelsize=16)
+
+
+    # Save the chart as a PNG file
+    plt.savefig('plot.png')
+    
     return templates.TemplateResponse(
         "classification_output.html",
         {
