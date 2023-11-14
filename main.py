@@ -60,7 +60,7 @@ async def request_classification(request: Request):
     classification_scores = classify_image(model_id=model_id, img_id=image_id)
     result.generate_JSON(classification_score= classification_scores)  #generate JSON file for the result of classification-score
     with open("result.json", "w") as f:
-        json.dump(result.classification_results, f)  #generate JSON file for the result of classification-score      
+        json.dump(result.classification_results, f)  #write the result into the JSON file   
     return templates.TemplateResponse(
         "classification_output.html",
         {
@@ -70,7 +70,11 @@ async def request_classification(request: Request):
         },
     )
 
-@app.get("/classifications/download")
+@app.get("/classifications/result")
 async def download_result():
     return FileResponse('result.json', media_type='application/json', filename='result.json')
+
+@app.get("/classifications/plot")
+async def download_plot():
+    return FileResponse('plot.png', media_type='image/png', filename='plot.png')
     
