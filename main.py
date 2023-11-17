@@ -1,15 +1,14 @@
 import json
 from typing import Dict, List
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Form  # is necessary to import also Form, to use it in the request_classification
+# function, to obtain the sharpness value
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-import redis
-from rq import Connection, Queue
-from rq.job import Job
 from app.config import Configuration
 from app.forms.classification_form import ClassificationForm
 from app.ml.classification_utils import classify_image
+from app.ml.image_transformation import change_sharpness
 from app.utils import list_images
 from app.data_storage import result_storage
 from fastapi.responses import FileResponse
@@ -53,12 +52,13 @@ def create_classify(request: Request):
 
 
 @app.post("/classifications")
-async def request_classification(request: Request):
+async def request_classification(request: Request, sharpness_value: float = Form(1)):
     form = ClassificationForm(request)
     await form.load_data()
     image_id = form.image_id
     model_id = form.model_id
-    classification_scores = classify_image(model_id=model_id, img_id=image_id)
+    sharped_image_id = change_sharpness(image_id=image_id, value=sharpness_value)
+    classification_scores = classify_image(model_id=model_id, img_id=sharped_image_id)
     result.generate_JSON(classification_score= classification_scores)  #generate JSON file for the result of classification-score
     with open("result.json", "w") as f:
         json.dump(result.classification_results, f)  #write the result into the JSON file   
@@ -81,7 +81,7 @@ async def request_classification(request: Request):
         "classification_output.html",
         {
             "request": request,
-            "image_id": image_id,
+            "image_id": sharped_image_id,
             "classification_scores": json.dumps(classification_scores),
         },
     )
