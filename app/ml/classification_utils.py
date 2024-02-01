@@ -7,7 +7,9 @@ import json
 import logging
 import os
 import torch
+import numpy as np
 from PIL import Image
+from io import BytesIO
 from torchvision import transforms
 
 from app.config import Configuration
@@ -22,7 +24,6 @@ def fetch_image(image_id):
     image_path = os.path.join(conf.image_folder_path, image_id)
     img = Image.open(image_path)
     return img
-
 
 def get_labels():
     """Returns the labels of Imagenet dataset as a list, where

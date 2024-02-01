@@ -1,9 +1,13 @@
 import json
+from PIL import Image
+from io import BytesIO
 from typing import Dict, List
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, File
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import JSONResponse
 import redis
 from rq import Connection, Queue
 from rq.job import Job
@@ -11,7 +15,10 @@ from app.config import Configuration
 from app.forms.classification_form import ClassificationForm
 from app.ml.classification_utils import classify_image
 from app.utils import list_images
+from app.ml.image_uploader import upload_image
 
+
+IMAGEDIR = Configuration.image_folder_path_img + "/imagenet_subset/"  # Path where the loaded image is saved
 
 app = FastAPI()
 config = Configuration()
@@ -49,6 +56,7 @@ async def request_classification(request: Request):
     form = ClassificationForm(request)
     await form.load_data()
     image_id = form.image_id
+    print(f"Image ID: {image_id}")
     model_id = form.model_id
     classification_scores = classify_image(model_id=model_id, img_id=image_id)
     return templates.TemplateResponse(
@@ -59,3 +67,34 @@ async def request_classification(request: Request):
             "classification_scores": json.dumps(classification_scores),
         },
     )
+
+
+############################
+# Selection phase of the image loaded
+
+@app.get("/image_from_PC")  
+def select_single_image(request: Request):
+    return templates.TemplateResponse(
+        "classification_select_image.html",
+        {"request": request, "models": Configuration.models},
+    )
+
+
+# Uploading the image to the classifier
+
+@app.post("/image_from_PC")
+async def create_upload_image(request: Request, file: UploadFile = File(...)): 
+    contents = await file.read()
+    image_id = upload_image(contents)
+    form = ClassificationForm(request)
+    await form.load_data()
+    model_id = form.model_id
+    classification_scores = classify_image(model_id=model_id, img_id=image_id)
+
+    return templates.TemplateResponse(
+        "classification_output.html",
+        {"request": request,
+         "image_id": image_id,
+         "classification_scores": json.dumps(classification_scores),
+         })
+
