@@ -10,7 +10,7 @@ function makeGraph(results) {
     console.log(results);
     results = JSON.parse(results);
     var ctx = document.getElementById("classificationOutput").getContext('2d');
-    new Chart(ctx, {
+    var myChart = new Chart(ctx, {
         type: 'horizontalBar',
         data: {
             labels: [results[0][0], results[1][0], results[2][0], results[3][0], results[4][0]],
