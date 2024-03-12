@@ -1,5 +1,5 @@
-fastapi[all]~=0.104.1
 
+fastapi[all]~=0.104.1
 torch
 
 torchvision~=0.15.2
