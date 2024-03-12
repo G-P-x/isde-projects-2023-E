@@ -1,4 +1,5 @@
 
+
 $(document).ready(function () {
     var scripts = document.getElementById('makeGraph');
     var classification_scores = scripts.getAttribute('classification_scores');
