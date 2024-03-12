@@ -2,6 +2,7 @@ import json
 from PIL import Image
 from io import BytesIO
 from typing import Dict, List
+
 from fastapi import FastAPI, Request, File
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
