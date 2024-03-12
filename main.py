@@ -55,10 +55,9 @@ def create_classify(request: Request):
 async def request_classification(request: Request, sharpness_value: float = Form(1)):
     form = ClassificationForm(request)
     await form.load_data()
-    image_id = form.image_id
+    image_id = change_sharpness(image_id=form.image_id, value=sharpness_value)
     model_id = form.model_id
-    sharped_image_id = change_sharpness(image_id=image_id, value=sharpness_value)
-    classification_scores = classify_image(model_id=model_id, img_id=sharped_image_id)
+    classification_scores = classify_image(model_id=model_id, img_id=image_id)
     result.generate_JSON(classification_score= classification_scores)  #generate JSON file for the result of classification-score
     with open("result.json", "w") as f:
         json.dump(result.classification_results, f)  #write the result into the JSON file   
@@ -81,7 +80,7 @@ async def request_classification(request: Request, sharpness_value: float = Form
         "classification_output.html",
         {
             "request": request,
-            "image_id": sharped_image_id,
+            "image_id": image_id,
             "classification_scores": json.dumps(classification_scores),
         },
     )
