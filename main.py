@@ -9,10 +9,11 @@ from rq import Connection, Queue
 from rq.job import Job
 from app.config import Configuration
 from app.forms.classification_form import ClassificationForm
-from app.forms.histogram_form import HistogramForm #tr
+from app.forms.histogram_form import HistogramForm
 from app.ml.classification_utils import classify_image
 from app.utils import list_images
-import cv2 #tr
+
+import cv2
 import numpy as np
 
 app = FastAPI()
