@@ -14,3 +14,13 @@ class Configuration:
         "vgg16",
         "inception_v3",
     )
+
+    ##########################################
+    # Path of the image loaded
+    image_folder_path_img = os.path.join(project_root, "static/imagenet_subset/")
+    models = (
+        "resnet18",
+        "alexnet",
+        "vgg16",
+        "inception_v3",
+    )

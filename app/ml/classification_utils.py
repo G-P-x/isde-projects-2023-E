@@ -7,7 +7,9 @@ import json
 import logging
 import os
 import torch
+import numpy as np
 from PIL import Image
+from io import BytesIO
 from torchvision import transforms
 
 from app.config import Configuration
