@@ -18,9 +18,7 @@ import matplotlib.pyplot as plt
 
 app = FastAPI()
 config = Configuration()
-global result
 result = result_storage()
-semaphore = False
 
 
 
