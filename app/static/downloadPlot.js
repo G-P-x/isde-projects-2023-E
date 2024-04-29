@@ -1,4 +1,4 @@
-document.getElementById('downloadButton').addEventListener('click', function() {
+document.getElementById('downloadPlotButton').addEventListener('click', function() {
     // Get the canvas element
     var canvas = document.getElementById('classificationOutput');
 
