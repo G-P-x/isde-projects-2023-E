@@ -84,11 +84,5 @@ async def request_classification(request: Request):
         },
     )
 
-@app.get("/classifications/result")
-async def download_result():
-    return FileResponse('result.json', media_type='application/json', filename='result.json')
 
-@app.get("/classifications/plot")
-async def download_plot():
-    return FileResponse('plot.png', media_type='image/png', filename='plot.png')
     
