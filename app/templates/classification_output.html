@@ -26,17 +26,15 @@
             border-radius: 5px;
             float: right;
           }
-          #downloadPlotButton {
-            margin: 10px auto; /* Aggiungi questa linea */
-          }
-          #downloadScoresButton {
-            margin: 10px auto; /* Aggiungi questa linea */
-          }
-          
-          
-          .button:hover {
-            background-color: #97d6bb;
-          }
+        #downloadPlotButton {
+        margin: 10px auto; 
+        }
+        #downloadScoresButton {
+        margin: 10px auto; 
+        }
+        .button:hover {
+        background-color: #97d6bb;
+        }
     </style>
 
     <div class="row">
@@ -62,7 +60,6 @@
         </div>
     </div>
     
-
     <script src="{{ "static/graph.js" }}" id="makeGraph" classification_scores="{{classification_scores}}"></script>
 
     <script src="{{ "static/downloadPlot.js" }}"></script>
@@ -70,4 +67,3 @@
     <script src="{{ "static/downloadScores.js" }}"></script>
 
 {% endblock %}
-
