@@ -16,6 +16,7 @@ from app.utils import list_images
 app = FastAPI()
 config = Configuration()
 
+
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
@@ -59,3 +60,6 @@ async def request_classification(request: Request):
             "classification_scores": json.dumps(classification_scores),
         },
     )
+
+
+    
