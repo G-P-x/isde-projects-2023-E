@@ -1,4 +1,6 @@
 import json
+import os
+import asyncio
 from PIL import Image
 from io import BytesIO
 from typing import Dict, List
@@ -17,6 +19,7 @@ from app.forms.classification_form import ClassificationForm
 from app.ml.classification_utils import classify_image
 from app.ml.image_transformation import change_sharpness
 from app.ml.image_uploader import upload_image
+from app.ml.image_uploader import remove_uploaded_image
 from app.utils import list_images
 from app.data_storage import result_storage
 from fastapi.responses import FileResponse
@@ -53,6 +56,9 @@ def home(request: Request):
 
 @app.get("/classifications")
 def create_classify(request: Request):
+    
+    # Removing the image to prevent overwriting
+    remove_uploaded_image()
     return templates.TemplateResponse(
         "classification_select.html",
         {"request": request, "images": list_images(), "models": Configuration.models},
@@ -111,21 +117,20 @@ def select_single_image(request: Request):
     )
 
 
-
-
 @app.post("/image_from_PC")
 async def create_upload_image(request: Request, file: UploadFile = File(...)): 
     contents = await file.read()
     image_id = upload_image(contents)
+    #image_path = save_uploaded_image(contents)  # Save the uploaded image temporarily
     form = ClassificationForm(request)
     await form.load_data()
     model_id = form.model_id
     classification_scores = classify_image(model_id=model_id, img_id=image_id)
-
+    
     return templates.TemplateResponse(
         "classification_output_from_upload.html",
         {"request": request,
          "image_id": image_id,
          "classification_scores": json.dumps(classification_scores),
          })
-
+    
