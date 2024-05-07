@@ -1,15 +1,25 @@
 import json
+import os
+import asyncio
+from PIL import Image
+from io import BytesIO
 from typing import Dict, List
 from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, File, Form
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import JSONResponse
 import redis
 from rq import Connection, Queue
 from rq.job import Job
 from app.config import Configuration
 from app.forms.classification_form import ClassificationForm
 from app.ml.classification_utils import classify_image
+from app.ml.image_transformation import change_sharpness
+from app.ml.image_uploader import upload_image
+from app.ml.image_uploader import remove_uploaded_image
 from app.utils import list_images
 
 
@@ -39,6 +49,9 @@ def home(request: Request):
 
 @app.get("/classifications")
 def create_classify(request: Request):
+    
+    # Removing the image to prevent overwriting
+    remove_uploaded_image()
     return templates.TemplateResponse(
         "classification_select.html",
         {"request": request, "images": list_images(), "models": Configuration.models},
@@ -46,10 +59,10 @@ def create_classify(request: Request):
 
 
 @app.post("/classifications")
-async def request_classification(request: Request):
+async def request_classification(request: Request, sharpness_value: float = Form(1)):
     form = ClassificationForm(request)
     await form.load_data()
-    image_id = form.image_id
+    image_id = change_sharpness(image_id=form.image_id, value=sharpness_value)
     model_id = form.model_id
     classification_scores = classify_image(model_id=model_id, img_id=image_id)
     return templates.TemplateResponse(
@@ -62,4 +75,31 @@ async def request_classification(request: Request):
     )
 
 
+    
+
+
+@app.get("/image_from_PC")  
+def select_single_image(request: Request):
+    return templates.TemplateResponse(
+        "classification_select_image.html",
+        {"request": request, "models": Configuration.models},
+    )
+
+
+@app.post("/image_from_PC")
+async def create_upload_image(request: Request, file: UploadFile = File(...)): 
+    contents = await file.read()
+    image_id = upload_image(contents)
+    #image_path = save_uploaded_image(contents)  # Save the uploaded image temporarily
+    form = ClassificationForm(request)
+    await form.load_data()
+    model_id = form.model_id
+    classification_scores = classify_image(model_id=model_id, img_id=image_id)
+    
+    return templates.TemplateResponse(
+        "classification_output_from_upload.html",
+        {"request": request,
+         "image_id": image_id,
+         "classification_scores": json.dumps(classification_scores),
+         })
     
