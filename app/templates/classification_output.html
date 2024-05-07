@@ -10,8 +10,33 @@
             display: block;
             margin: 0 auto;
         }
-
+        .button {
+            display: block;
+            width: 200px;
+            height: 50px;
+            
+            background-color: #25a6d1;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.5s;
+            cursor: pointer;
+            border-radius: 5px;
+            float: right;
+          }
+        #downloadPlotButton {
+        margin: 10px auto; 
+        }
+        #downloadScoresButton {
+        margin: 10px auto; 
+        }
+        .button:hover {
+        background-color: #97d6bb;
+        }
     </style>
+
     <div class="row">
         <div class="col">
             <div class="card">
@@ -28,25 +53,17 @@
                         <h2 id="waitText"></h2>
                     </div>
                 </div>
-                <a class="btn btn-primary" href="/classifications" role="button">Back</a>
             </div>
+                <a class="btn btn-primary" href="/classifications" role="button">Back</a>
+                <a href="#" id="downloadPlotButton" class="button">Download Graph</a>
+                <a href="#" id="downloadScoresButton" class="button">Download Scores</a>     
         </div>
     </div>
-
-    <div>
-        <div class="row justify-content-end mb-2">
-            <a href="/classifications/result" download class="btn btn-secondary" style="width: 25%; margin-right: 20px;">Download Result</a>
-        </div>
-    </div>
-    <div>
-        <div class="row justify-content-end">
-            <a href="/classifications/plot" download class="btn btn-secondary" style="width: 25%; margin-right: 20px;">Download Plot</a>
-        </div>
-
-    </div>
-
+    
     <script src="{{ "static/graph.js" }}" id="makeGraph" classification_scores="{{classification_scores}}"></script>
+
+    <script src="{{ "static/downloadPlot.js" }}"></script>
+  
+    <script src="{{ "static/downloadScores.js" }}"></script>
+
 {% endblock %}
-
-
-
