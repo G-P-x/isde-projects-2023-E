@@ -7,7 +7,7 @@ from app.config import Configuration
 conf = Configuration()
 
 
-def cleanup_old_transformed_images(max_age_in_seconds=3600):
+def cleanup_old_transformed_images(max_age_in_seconds):
     current_time = time.time()
 
     for filename in os.listdir(conf.image_folder_path):
@@ -24,7 +24,7 @@ def cleanup_old_transformed_images(max_age_in_seconds=3600):
 
 
 def change_image_parameters(image_id: str, color: float, brightness: float, contrast: float, sharpness: float):
-    cleanup_old_transformed_images()  # Delete any old transformed images previously created
+    cleanup_old_transformed_images(max_age_in_seconds=3600)  # Delete any old transformed images previously created
 
     params = {
         'Color': color / 10,

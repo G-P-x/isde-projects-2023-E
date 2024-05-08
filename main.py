@@ -1,8 +1,6 @@
 import json
-import time
 from typing import Dict, List
-from fastapi import FastAPI, Request, Form  # is necessary to import also Form, to use it in the request_classification
-# function, to obtain the sharpness value
+from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -11,7 +9,6 @@ from app.forms.classification_form import ClassificationForm
 from app.ml.classification_utils import classify_image
 from app.ml.image_transformation import change_image_parameters
 from app.utils import list_images
-import os
 
 app = FastAPI()
 config = Configuration()
@@ -49,9 +46,8 @@ async def request_classification(request: Request, color_value: float = Form(), 
                                  contrast_value: float = Form(), sharpness_value: float = Form()):
     form = ClassificationForm(request)
     await form.load_data()
-
     image_id = change_image_parameters(image_id=form.image_id, color=color_value, brightness=brightness_value,
-                                           contrast=contrast_value, sharpness=sharpness_value)
+                                       contrast=contrast_value, sharpness=sharpness_value)
     model_id = form.model_id
     classification_scores = classify_image(model_id=model_id, img_id=image_id)
     return templates.TemplateResponse(
