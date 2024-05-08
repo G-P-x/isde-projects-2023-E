@@ -7,7 +7,7 @@ from fastapi.templating import Jinja2Templates
 from app.config import Configuration
 from app.forms.classification_form import ClassificationForm
 from app.ml.classification_utils import classify_image
-from app.ml.image_transformation import change_image_parameters
+from app.features.image_transformation import change_image_parameters
 from app.utils import list_images
 
 app = FastAPI()
