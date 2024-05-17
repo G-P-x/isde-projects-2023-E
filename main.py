@@ -1,7 +1,7 @@
 import json
 from typing import Dict, List
 from fastapi import FastAPI, Request
-from fastapi import FastAPI, Request, File, Form
+from fastapi import FastAPI, Request, File
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
