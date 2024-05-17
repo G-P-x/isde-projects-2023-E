@@ -1,6 +1,6 @@
 import json
 from typing import Dict, List
-from fastapi import Form
+from fastapi import Form, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -81,6 +81,11 @@ def select_single_image(request: Request):
 
 @app.post("/image_from_PC")
 async def create_upload_image(request: Request, file: UploadFile = File(...)): 
+    
+    # Check if the uploaded file is a PNG or JPEG
+    if file.content_type not in ["image/png", "image/jpeg"]:
+        raise HTTPException(status_code=400, detail="Only PNG or JPEG files are allowed. Try again!")
+    
     contents = await file.read()
     image_id = upload_image(contents)
     form = ClassificationForm(request)
