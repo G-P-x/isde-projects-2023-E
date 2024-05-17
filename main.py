@@ -50,8 +50,6 @@ def home(request: Request):
 @app.get("/classifications")
 def create_classify(request: Request):
     
-    # Removing the image to prevent overwriting
-    remove_uploaded_image()
     return templates.TemplateResponse(
         "classification_select.html",
         {"request": request, "images": list_images(), "models": Configuration.models},
@@ -80,6 +78,10 @@ async def request_classification(request: Request, sharpness_value: float = Form
 
 @app.get("/image_from_PC")  
 def select_single_image(request: Request):
+    
+    # Removing the image to prevent overwriting
+    remove_uploaded_image()
+    
     return templates.TemplateResponse(
         "classification_select_image.html",
         {"request": request, "models": Configuration.models},
@@ -90,7 +92,6 @@ def select_single_image(request: Request):
 async def create_upload_image(request: Request, file: UploadFile = File(...)): 
     contents = await file.read()
     image_id = upload_image(contents)
-    #image_path = save_uploaded_image(contents)  # Save the uploaded image temporarily
     form = ClassificationForm(request)
     await form.load_data()
     model_id = form.model_id
