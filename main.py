@@ -1,7 +1,6 @@
 import json
 from typing import Dict, List
-<<<<<<< HEAD
-from fastapi import FastAPI, Request, Form
+from fastapi import Form
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -9,19 +8,10 @@ from app.config import Configuration
 from app.forms.classification_form import ClassificationForm
 from app.ml.classification_utils import classify_image
 from app.features.image_transformation import change_image_parameters
-=======
-from fastapi import FastAPI, Request
-from fastapi import FastAPI, Request, File
-from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-from fastapi import FastAPI, File, UploadFile
-from app.config import Configuration
-from app.forms.classification_form import ClassificationForm
+from fastapi import FastAPI, File, UploadFile, Request
 from app.ml.classification_utils import classify_image
 from app.ml.image_uploader import upload_image
 from app.ml.image_uploader import remove_uploaded_image
->>>>>>> Upload_image_button_branch
 from app.utils import list_images
 
 app = FastAPI()
@@ -49,10 +39,6 @@ def home(request: Request):
 
 @app.get("/classifications")
 def create_classify(request: Request):
-<<<<<<< HEAD
-=======
-    
->>>>>>> Upload_image_button_branch
     return templates.TemplateResponse(
         "classification_select.html",
         {"request": request, "images": list_images(), "models": Configuration.models},
@@ -60,19 +46,12 @@ def create_classify(request: Request):
 
 
 @app.post("/classifications")
-<<<<<<< HEAD
 async def request_classification(request: Request, color_value: float = Form(), brightness_value: float = Form(),
                                  contrast_value: float = Form(), sharpness_value: float = Form()):
     form = ClassificationForm(request)
     await form.load_data()
     image_id = change_image_parameters(image_id=form.image_id, color=color_value, brightness=brightness_value,
                                        contrast=contrast_value, sharpness=sharpness_value)
-=======
-async def request_classification(request: Request):
-    form = ClassificationForm(request)
-    await form.load_data()
-    image_id = form.image_id
->>>>>>> Upload_image_button_branch
     model_id = form.model_id
     classification_scores = classify_image(model_id=model_id, img_id=image_id)
     return templates.TemplateResponse(
@@ -83,8 +62,6 @@ async def request_classification(request: Request):
             "classification_scores": json.dumps(classification_scores),
         },
     )
-<<<<<<< HEAD
-=======
 
 
     
@@ -118,4 +95,3 @@ async def create_upload_image(request: Request, file: UploadFile = File(...)):
          "classification_scores": json.dumps(classification_scores),
          })
     
->>>>>>> Upload_image_button_branch
