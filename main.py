@@ -1,8 +1,4 @@
 import json
-import os
-import asyncio
-from PIL import Image
-from io import BytesIO
 from typing import Dict, List
 from fastapi import FastAPI, Request
 from fastapi import FastAPI, Request, File, Form
@@ -10,14 +6,9 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi import FastAPI, File, UploadFile
-from fastapi.responses import JSONResponse
-import redis
-from rq import Connection, Queue
-from rq.job import Job
 from app.config import Configuration
 from app.forms.classification_form import ClassificationForm
 from app.ml.classification_utils import classify_image
-from app.ml.image_transformation import change_sharpness
 from app.ml.image_uploader import upload_image
 from app.ml.image_uploader import remove_uploaded_image
 from app.utils import list_images
@@ -57,10 +48,10 @@ def create_classify(request: Request):
 
 
 @app.post("/classifications")
-async def request_classification(request: Request, sharpness_value: float = Form(1)):
+async def request_classification(request: Request):
     form = ClassificationForm(request)
     await form.load_data()
-    image_id = change_sharpness(image_id=form.image_id, value=sharpness_value)
+    image_id = form.image_id
     model_id = form.model_id
     classification_scores = classify_image(model_id=model_id, img_id=image_id)
     return templates.TemplateResponse(

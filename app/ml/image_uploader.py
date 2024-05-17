@@ -1,7 +1,5 @@
 from app.config import Configuration
 import os
-import asyncio
-import time
 
 conf = Configuration()
 image_id = "uploaded_image.JPEG"

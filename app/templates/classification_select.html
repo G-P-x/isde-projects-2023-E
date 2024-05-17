@@ -2,11 +2,6 @@
 
 {% block content %}
 
-<head>
-    <style>
-        .slidercontainer .slider-labels span { font-size: 50px; }
-    </style>
-</head>
 
     <h1>Select Model and Image</h1>
     <form method="post" novalidate>
@@ -30,18 +25,6 @@
                 {% endfor %}
               </select>
         </p>
-        <h4>
-            Sharpness:
-        </h4>
-            <div class="slidecontainer">
-                <span>-</span>
-                    <input type="range" min="-20" max="20" value="1" class="slider" id="myRange" name="sharpness_value">
-                <span>+</span>
-            </div>
-        <h6>
-            Move the slider to adjust the sharpness of the image<br>
-            Default value is 1 (standard sharpness)
-        </h6>
         <button type="submit" class="btn btn-dark mb-2">Submit</button>
       </form>
 
