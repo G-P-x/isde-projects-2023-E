@@ -1,9 +1,12 @@
 import json
+import cv2
+import numpy as np
 from typing import Dict, List
-from fastapi import FastAPI, Request, File, UploadFile
+from fastapi import FastAPI, Request, File, UploadFile, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from app.forms.histogram_form import HistogramForm
 import redis
 from rq import Connection, Queue
 from rq.job import Job
@@ -64,6 +67,34 @@ async def request_classification(request: Request):
             "classification_scores": json.dumps(classification_scores),
         },
     )
+@app.get("/image_histogram")
+def create_histogram(request: Request):
+         return templates.TemplateResponse(
+            "histogram_select.html",
+            {"request": request, "images": list_images()},
+         )
+
+@app.post("/image_histogram")
+async def request_classification(request: Request):
+        form = HistogramForm(request)
+        await form.load_data()
+        image_id = form.image_id
+
+        # read image
+        im = cv2.imread('app/static/imagenet_subset/' + image_id)
+        # calculate mean value from RGB channels and flatten to 1D array
+        vals = im.mean(axis=2).flatten()
+        # calculate histogram
+        histogram, bins = np.histogram(vals, range(257))
+
+        return templates.TemplateResponse(
+            "histogram_output.html",
+            {
+                "request": request,
+                "image_id": image_id,
+                "histogram": json.dumps(histogram.tolist()),
+            },
+        )
 
 
     
@@ -82,7 +113,10 @@ def select_single_image(request: Request):
 
 
 @app.post("/image_from_PC")
-async def create_upload_image(request: Request, file: UploadFile = File(...)): 
+async def create_upload_image(request: Request, file: UploadFile = File(...)):
+    # Check if the uploaded file is a PNG or JPEG
+    if file.content_type not in ["image/png", "image/jpeg"]:
+        raise HTTPException(status_code=400, detail="Only PNG or JPEG files are allowed. Try again!")
     contents = await file.read()
     image_id = upload_image(contents)
     form = ClassificationForm(request)
