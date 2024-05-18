@@ -21,6 +21,3 @@ def upload_image(contents):
     with open(f"{image_path}", "wb") as f:
         f.write(contents)
     return image_id
-
-
-    

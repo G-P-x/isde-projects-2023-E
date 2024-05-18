@@ -1,17 +1,19 @@
 import json
 from typing import Dict, List
-from fastapi import FastAPI, Request
-from fastapi import FastAPI, Request, File
+from fastapi import FastAPI, Request, File, UploadFile
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi import FastAPI, File, UploadFile
+import redis
+from rq import Connection, Queue
+from rq.job import Job
 from app.config import Configuration
 from app.forms.classification_form import ClassificationForm
 from app.ml.classification_utils import classify_image
+from app.utils import list_images
 from app.ml.image_uploader import upload_image
 from app.ml.image_uploader import remove_uploaded_image
-from app.utils import list_images
+
 
 
 app = FastAPI()
