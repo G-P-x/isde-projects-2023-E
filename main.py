@@ -20,6 +20,7 @@ from app.ml.image_uploader import remove_uploaded_image
 app = FastAPI()
 config = Configuration()
 
+
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
