@@ -2,33 +2,81 @@
 
 {% block content %}
 
-    <h1>Select Model and Image</h1>
-    <form method="post" novalidate>
-        <h4>
-            Model:
-        </h4>
-        <p>
-            <select name="model_id">
-                {% for model in models %}
-                  <option value="{{ model }}" SELECTED>{{ model }}</option>
-                {% endfor %}     
-              </select>
-        </p>
-        <h4>
-            Image:
-        </h4>
-        <p>
-            <select name="image_id">
-                {% for image in images %}
-                  <option value="{{ image }}" SELECTED>{{ image }}</option>
-                {% endfor %}     
-              </select>
-        </p>
-        <button type="submit" class="btn btn-dark mb-2">Submit</button>
-    </form>
+<head>
+    <style>
+        .slidercontainer .slider-labels span { font-size: 50px; }
 
+    </style>
+</head>
+
+<h1>Select Model and Image</h1>
+<form method="post" novalidate>
+    <h4>
+        Model:
+    </h4>
+    <p>
+        <select name="model_id">
+            {% for model in models %}
+            <option value="{{ model }}" SELECTED>{{ model }}</option>
+            {% endfor %}
+        </select>
+    </p>
+    <h4>
+        Image:
+    </h4>
+    <p>
+        <select name="image_id">
+            {% for image in images %}
+            <option value="{{ image }}" SELECTED>{{ image }}</option>
+            {% endfor %}
+        </select>
+    </p>
+    <h4>
+        Image parameters
+    </h4>
+    <p>
+        Move the slider to adjust the parameter of the image<br>
+        Default value is 1 (standard value)
+    </p>
+    <h6>
+        Color:
+    </h6>
+    <div class="slidecontainer">
+        <span>-</span>
+        <input type="range" min="0" max="20" value="10" class="slider" id="colorRange" name="color_value">
+        <span>+</span>
+    </div>
+    <h6>
+        Brightness:
+    </h6>
+    <div class="slidecontainer">
+        <span>-</span>
+        <input type="range" min="0" max="20" value="10" class="slider" id="brightnessRange" name="brightness_value">
+        <span>+</span>
+    </div>
+    <h6>
+        Contrast:
+    </h6>
+    <div class="slidecontainer">
+        <span>-</span>
+        <input type="range" min="0" max="20" value="10" class="slider" id="contrastRange" name="contrast_value">
+        <span>+</span>
+    </div>
+    <h6>
+        Sharpness:
+    </h6>
+    <div class="slidecontainer">
+        <span>-</span>
+        <input type="range" min="0" max="20" value="10" class="slider" id="sharpnessRange" name="sharpness_value">
+        <span>+</span>
+    </div>
+    <button type="submit" class="btn btn-dark mb-2">Submit</button>
+  
     <!-- Upload button -->
     <form>
       <a class="btn btn-primary" href="/image_from_PC" role="button">Upload</a>
     </form>
+  
+</form>
+
 {% endblock %}
