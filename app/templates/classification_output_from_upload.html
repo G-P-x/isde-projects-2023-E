@@ -36,7 +36,6 @@
         background-color: #97d6bb;
         }
     </style>
-
     <div class="row">
         <div class="col">
             <div class="card">
@@ -53,17 +52,14 @@
                         <h2 id="waitText"></h2>
                     </div>
                 </div>
-            </div>
                 <a class="btn btn-primary" href="/classifications" role="button">Back</a>
                 <a href="#" id="downloadPlotButton" class="button">Download Graph</a>
                 <a href="#" id="downloadScoresButton" class="button">Download Scores</a>     
+            </div>
         </div>
     </div>
-    
+
     <script src="{{ "static/graph.js" }}" id="makeGraph" classification_scores="{{classification_scores}}"></script>
-
-    <script src="{{ "static/downloadPlot.js" }}"></script>
-  
+    <script src="{{ "static/downloadPlot.js" }}"></script>  
     <script src="{{ "static/downloadScores.js" }}"></script>
-
 {% endblock %}
