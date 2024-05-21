@@ -10,9 +10,6 @@ def remove_uploaded_image():
     
     if os.path.exists(image_path):
             os.remove(image_path)
-            print("Image removed successfully")
-    else:
-        print("Image not found at the provided path:", image_path)
 
 
 def upload_image(contents):
