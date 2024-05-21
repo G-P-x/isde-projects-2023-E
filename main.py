@@ -73,6 +73,10 @@ async def request_classification(request: Request, color_value: float = Form(), 
     )
 @app.get("/image_histogram")
 def create_histogram(request: Request):
+
+        # Removing the image to prevent overwriting
+         remove_uploaded_image()
+
          return templates.TemplateResponse(
             "histogram_select.html",
             {"request": request, "images": list_images()},
@@ -102,8 +106,6 @@ async def request_classification(request: Request):
 
 @app.get("/image_from_PC")  
 def select_single_image(request: Request):
-    
-    
     return templates.TemplateResponse(
         "classification_select_image.html",
         {"request": request, "models": Configuration.models},
