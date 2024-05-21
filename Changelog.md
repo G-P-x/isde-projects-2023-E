@@ -33,3 +33,5 @@ All notable changes to this project will be documented in this file.
 - Modified `config.py` to set the image saving path.
 - Modified `requirements.txt` to include the `opencv-python` library.
 - Modified `.gitingore` to avoid files that shouldn't be versioned.
+- Modified `main.py` adding the remove_uploaded_image function into the get of image_histogram and into the get of image_from_PC
+- Modified `image_uploader.py` removing the print
