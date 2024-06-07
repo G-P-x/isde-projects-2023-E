@@ -1,6 +1,7 @@
 import os
 from PIL import Image, ImageEnhance
 from app.config import Configuration
+import uuid
 
 conf = Configuration()
 
@@ -24,7 +25,7 @@ def change_image_parameters(image_id: str, color: float, brightness: float, cont
 
     # Construct the input and output image paths
     input_image_path = os.path.join(conf.image_folder_path, image_id)
-    transformed_image_id = "transformed_image.JPEG"
+    transformed_image_id = 'transformed_image_' + str(uuid.uuid4()) + '.JPEG'
     output_image_path = os.path.join(temp_dir, transformed_image_id)
 
     try:
